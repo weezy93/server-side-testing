@@ -216,14 +216,19 @@ it('should POST a show', function(done) {
     })
     .end(function(err, res) {
 
-        done();
+        chai.request(server)
+        .get('/api/show/' + res.body[0])
+        .end(function(error, response) {
+        //test code
+            done()
+        })
     });
 });
 ```
 
-- With a post, we need to send data up to the server. Mocha allows us to do that using `.send` with an object containing our data. Again, we can test what is coming back to make sure we get the correct response from the server.
+- With a post, we need to send data up to the server. Mocha allows us to do that using `.send` with an object containing our data. Again, we can test what is coming back to make sure we get the correct response from the server. Mocha allows us to nest requests. The reason we would do this is that the POST route with knex simply returns an id in an array. So what we would want to test that this data has actually been saved into our database with another nested request to see if that object has saved correctly.
 
-1. PUT route - This is similiar to the post, we will need to send some data to the server
+1. PUT route - This is similiar to the post, we will need to send some data to the server, we will get an id back and then we use that id through our get single route to check the item has been updated correctly
 
 ```js
 it('should edit a show', function(done) {
@@ -238,7 +243,12 @@ it('should edit a show', function(done) {
     })
     .end(function(err, res) {
 
-        done();
+        chai.request(server)
+        .get('/api/show/' + res.body)
+        .end(function(error, response) {
+            //test code to check object
+            done();
+        })
     });
 });
 ```
