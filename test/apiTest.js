@@ -37,19 +37,3 @@ describe('API routes', function() {
 
 });
 
-        it('should POST a show', function(done) {
-            chai.request(server)
-            .post('/api/shows')
-            .send({
-                name: 'new show',
-                channel : 'ABC',
-                genre: 'Anything',
-                rating: 1,
-                explicit: false
-            })
-            .end(function(err, res) {
-
-                done();
-            });
-        });
-
