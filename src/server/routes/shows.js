@@ -12,16 +12,32 @@ router.get('/shows', function(req, res, next) {
   })
 });
 
+router.get('/show/:id', function(req, res, next) {
+    Shows().where('id', req.params.id).first()
+    .then(function(result) {
+        res.status(200).json(result);
+    })
+})
+
 router.post('/shows', function(req, res, next) {
-    Shows().insert({
-        name: req.body.name,
-        channel : req.body.channel,
-        genre: req.body.genre,
-        rating: req.body.rating,
-        explicit: req.body.explicit
-    }, 'id').then(function(result) {
+    Shows().insert(req.body, 'id').then(function(result) {
         res.status(200).json(result);
     });
+});
+
+router.put('/show/:id', function(req, res, next) {
+    Shows().where('id', req.params.id)
+    .update(req.body)
+    .then(function(result){
+        res.status(200).json(result);
+    })
+})
+
+router.delete('/show/:id', function(req, res, next) {
+    Shows().where('id', req.params.id).del()
+    .then(function(result) {
+        res.status(200).json(result);
+    })
 })
 
 module.exports = router;

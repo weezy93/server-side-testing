@@ -72,6 +72,47 @@ describe('API routes', function() {
         });
     })
 
+    describe('edit single show', function() {
+
+     it('should edit a show', function(done) {
+            chai.request(server)
+            .put('/api/show/1')
+            .send({
+                name: 'Edited Suits',
+                channel : 'testing'
+            })
+            .end(function(err, res) {
+                console.log(res.body);
+                res.should.have.status(200);
+                res.should.be.json;
+                chai.request(server)
+                .get('/api/show/1')
+                .end(function(error, response) {
+                    console.log(response.body);
+                    done()
+                });
+            });
+        });
+    });
+
+    describe('delete a show', function() {
+        it('should edit a show', function(done) {
+            chai.request(server)
+            .delete('/api/show/1')
+            .end(function(err, res) {
+                console.log(res.body);
+                res.should.have.status(200);
+                res.should.be.json;
+                chai.request(server)
+                .get('/api/shows')
+                .end(function(error, response) {
+                    console.log(response.body);
+                    done()
+                });
+            });
+        });
+    })
+
 });
 
 
