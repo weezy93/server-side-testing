@@ -25,7 +25,7 @@ describe('Get all shows', function() {
             res.body[0].should.have.property('rating');
             res.body[0].rating.should.equal(3);
             res.body[0].should.have.property('explicit');
-            res.body[0].channel.should.equal(false);
+            res.body[0].explicit.should.equal(false);
             done();
         });
     });
