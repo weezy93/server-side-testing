@@ -221,9 +221,34 @@ it('should POST a show', function(done) {
 });
 ```
 
+Generally, with a POST request, what we want to do is test if the whole object is being saved into the database. We can nest chai requests so that once we get a request back, we send up another one. For example, we get the ID back from this request and then we want to send a get request with that id to see if that object is in the database. We would do this with the following structure:
+
+```js
+it('should POST a show', function(done) {
+    chai.request(server)
+    .post('/api/shows')
+    .send({
+        name: 'new show',
+        channel : 'ABC',
+        genre: 'Anything',
+        rating: 1,
+        explicit: false
+    })
+    .end(function(err, res) {
+
+        chai.request(server)
+        .get('/api/show/' + req.body[0])
+        .end(function(error, response) {
+
+            done();
+        })
+    });
+});
+```
+
 - With a post, we need to send data up to the server. Mocha allows us to do that using `.send` with an object containing our data. Again, we can test what is coming back to make sure we get the correct response from the server.
 
-1. PUT route - This is similiar to the post, we will need to send some data to the server
+1. PUT route - This is similiar to the post, we will need to send some data to the server, then once we get data back, let's send another GET request to make sure our data has changed
 
 ```js
 it('should edit a show', function(done) {

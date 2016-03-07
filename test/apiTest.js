@@ -67,7 +67,12 @@ describe('API routes', function() {
                 console.log('Post Result : ', res.body);
                 res.should.have.status(200);
                 res.should.be.json;
-                done();
+                chai.request(server)
+                .get('/api/show/' + res.body[0])
+                .end(function(error, response){
+                    console.log(response.body);
+                    done()
+                })
             });
         });
     })
