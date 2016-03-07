@@ -9,6 +9,23 @@ chai.use(chaiHttp);
 
 describe('API routes', function() {
 
+    beforeEach(function(done) {
+        knex.migrate.rollback().then(function() {
+            knex.migrate.latest()
+            .then(function() {
+                return knex.seed.run().then(function() {
+                    done()
+                })
+            })
+        });
+    })
+
+  /*  afterEach(function(done) {
+        knex.migrate.rollback().then(function() {
+            done();
+        });
+    });*/
+
     describe('Get all shows', function() {
 
         it('should get all shows', function(done) {
@@ -32,10 +49,9 @@ describe('API routes', function() {
                 done();
             });
         });
-
     });
 
-});
+    describe('post single show', function() {
 
         it('should POST a show', function(done) {
             chai.request(server)
@@ -48,8 +64,14 @@ describe('API routes', function() {
                 explicit: false
             })
             .end(function(err, res) {
-
+                console.log(res.body);
+                res.should.have.status(200);
+                res.should.be.json;
                 done();
             });
         });
+    })
+
+});
+
 
