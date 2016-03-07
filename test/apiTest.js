@@ -64,7 +64,7 @@ describe('API routes', function() {
                 explicit: false
             })
             .end(function(err, res) {
-                console.log(res.body);
+                console.log('Post Result : ', res.body);
                 res.should.have.status(200);
                 res.should.be.json;
                 done();
