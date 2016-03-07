@@ -9,20 +9,6 @@ chai.use(chaiHttp);
 
 describe('API routes', function() {
 
-    beforeEach(function(done) {
-        knex.migrate.latest()
-        .then(function() {
-            done();
-            return knex.seed.run();
-        })
-    })
-
-    afterEach(function(done) {
-        knex.migrate.rollback().then(function() {
-            done();
-        });
-    });
-
     describe('Get all shows', function() {
 
         it('should get all shows', function(done) {
@@ -50,4 +36,20 @@ describe('API routes', function() {
     });
 
 });
+
+        it('should POST a show', function(done) {
+            chai.request(server)
+            .post('/api/shows')
+            .send({
+                name: 'new show',
+                channel : 'ABC',
+                genre: 'Anything',
+                rating: 1,
+                explicit: false
+            })
+            .end(function(err, res) {
+
+                done();
+            });
+        });
 

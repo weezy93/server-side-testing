@@ -135,7 +135,128 @@ describe('Get all shows', function() {
 
 The first thing we generally want to do, is test that the response has a status of 200. After that, these tests will change depending on what you want back from your route. In this case, we are expecting json back. We expect that the response will be an array, as we are 'getting ALL shows', we want that length to equal 4, as there are 4 items in the database. Then after that, we can actually start testing out the values within the array, and making sure that they are equal to what's actually in our database.
 
-##
+### Before and After tests
+
+```js
+describe('API routes', function() {
+
+        beforeEach(function(done) {
+            knex.migrate.latest()
+            .then(function() {
+                done();
+                return knex.seed.run();
+            })
+        })
+
+        afterEach(function(done) {
+            knex.migrate.rollback().then(function() {
+                done();
+            });
+        });
+
+    describe('Get all shows', function() {
+
+        it('should get all shows', function(done) {
+             //Code for tests
+        });
+
+    });
+
+});
+```
+
+Let's add the above into our code. Mocha has before and after functions that allow us to do something before and after each test. What we want to do with this is run a migration and seed before each test, then roll back that migration before we start on the next one. This should give us a clean database with its initial seed each time we start a new describe block.
+
+### Pass the test
+
+So now we have the initial setup with our first test written. So it's time to make it pass. If you run `mocha` in your terminal right now, you should see the following:
+
+```sh
+$ mocha
+  API routes
+    Get all shows
+GET /api/shows 200 8.436 ms - 9
+      1) should get all shows
+
+
+  0 passing (50ms)
+  1 failing
+
+  1) API routes Get all shows should get all shows:
+     Uncaught AssertionError: expected 'testing' to be an array
+      at test/apiTest.js:20:36
+      at Test.Request.callback (node_modules/superagent/lib/node/index.js:785:12)
+      at IncomingMessage.<anonymous> (node_modules/superagent/lib/node/index.js:990:12)
+      at endReadableNT (_stream_readable.js:905:12)
+```
+
+So now go and edit the route in 'routes/show.js' to make that test pass.
+
+### More mocha routes
+
+So now we have a test for our first GET route which is (hopefully) passing. How can we test our other routes? Let's look at the setup for the other tests we will need. Go through each exercise below and write the tests. Then get them to pass.
+
+1. GET single route - This one should be set up in the same way as the get route above, only the endpoint will be different
+
+1. POST route - Here, we need to send some data with mocha. This is how we would do that:
+
+```js
+it('should POST a show', function(done) {
+    chai.request(server)
+    .post('/api/shows')
+    .send({
+        name: 'new show',
+        channel : 'ABC',
+        genre: 'Anything',
+        rating: 1,
+        explicit: false
+    })
+    .end(function(err, res) {
+
+        done();
+    });
+});
+```
+
+- With a post, we need to send data up to the server. Mocha allows us to do that using `.send` with an object containing our data. Again, we can test what is coming back to make sure we get the correct response from the server.
+
+1. PUT route - This is similiar to the post, we will need to send some data to the server
+
+```js
+it('should edit a show', function(done) {
+    chai.request(server)
+    .put('/api/show/1')
+    .send({
+        name: 'Edited Suits',
+        channel : 'New Channel',
+        genre: 'Drama',
+        rating: 3,
+        explicit: false
+    })
+    .end(function(err, res) {
+
+        done();
+    });
+});
+```
+
+1. DELETE route - This time, we just need to send a delete request to the server, and test what comes back
+
+```js
+it('should edit a show', function(done) {
+    chai.request(server)
+    .delete('/api/show/1')
+    .end(function(err, res) {
+
+        done();
+    });
+});
+```
+
+### Conclusion/Next steps
+
+With testing, alot of this becomes repetition. Try going to one of your previous CRUD apps and setting up a test folder to test out your routes.
+
 
 
 
