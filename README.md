@@ -140,19 +140,22 @@ The first thing we generally want to do, is test that the response has a status 
 ```js
 describe('API routes', function() {
 
-        beforeEach(function(done) {
+    beforeEach(function(done) {
+        knex.migrate.rollback().then(function() {
             knex.migrate.latest()
             .then(function() {
-                done();
-                return knex.seed.run();
+                return knex.seed.run().then(function() {
+                    done()
+                })
             })
-        })
-
-        afterEach(function(done) {
-            knex.migrate.rollback().then(function() {
-                done();
-            });
         });
+    })
+
+    afterEach(function(done) {
+        knex.migrate.rollback().then(function() {
+            done();
+        });
+    });
 
     describe('Get all shows', function() {
 
@@ -165,7 +168,7 @@ describe('API routes', function() {
 });
 ```
 
-Let's add the above into our code. Mocha has before and after functions that allow us to do something before and after each test. What we want to do with this is run a migration and seed before each test, then roll back that migration before we start on the next one. This should give us a clean database with its initial seed each time we start a new describe block.
+Let's add the above into our code. Mocha has before and after functions that allow us to do something before and after each test. What we want to do with this is clear our database then run a migration and seed before each test, then roll back that migration before we start on the next one. This should give us a clean database with its initial seed each time we start a new describe block.
 
 ### Pass the test
 
