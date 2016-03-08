@@ -9,6 +9,23 @@ chai.use(chaiHttp);
 
 describe('API routes', function() {
 
+    beforeEach(function(done) {
+        knex.migrate.rollback().then(function() {
+            knex.migrate.latest()
+            .then(function() {
+                return knex.seed.run().then(function() {
+                    done()
+                });
+            });;
+        });
+    });
+
+    afterEach(function(done) {
+        knex.migrate.rollback().then(function() {
+            done();
+        });
+    });
+
     describe('Get all shows', function() {
 
         it('should get all shows', function(done) {
