@@ -16,7 +16,7 @@ describe('API routes', function() {
                 return knex.seed.run().then(function() {
                     done()
                 });
-            });;
+            });
         });
     });
 
