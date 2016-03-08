@@ -15,7 +15,7 @@ $ createdb tv_shows
 1. Run the knex migrations and seed
 
 ```sh
-$ knex migrate: latest -env development
+$ knex migrate:latest --env development
 $ knex seed:run
 ```
 
